@@ -66,8 +66,8 @@ void get_argv(char* str, const char* delim, char* argv[]) {
 
   /* walk through other tokens */
   while( token != NULL ) {
-    argv[i] = token;
-    token = strtok(NULL, delim);
+    argv[i] = token; 
+    token = strtok(NULL, delim); //(NULL, delim) fortsätt att tokeniza
     i++;
   }
   argv[i] = NULL;

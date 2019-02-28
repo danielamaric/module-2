@@ -8,19 +8,50 @@
 
 void child_a(int fd[]) {
 
-  // TODO: Add code here.
+  close(fd[0]);
+  dup2(fd[1], 1);
+  execlp("ls", "ls", "-F", "-1", NULL);
+
+
 
 }
 
 void child_b(int fd[]) {
 
-  // TODO: Add code here.
+  close(fd[1]);
+  dup2(fd[0], 0);
+  execlp("nl", "nl", NULL);
+
+ 
 
 }
 
 int main(void) {
   int fd[2];
+  if (pipe(fd) == -1){
+    perror("Could not create pipe!");
+    exit(EXIT_FAILURE);
+  }
 
-  // TODO: Add code here.
+  pid_t child_a_pid = fork();
+  
+  if (child_a_pid == 0){
+    child_a(fd);
+    
+    
+  } else {
+    pid_t child_b_pid = fork();
+    if (child_b_pid == 0){
+      child_b(fd);
+      
+    } else {
+      //parent
+      //close(fd[0]);
+      close(fd[1]);
+      wait(NULL); // could use &child_a_pid instead of null 
+      wait(NULL);
+      
+    }
+  }
 
 }
